@@ -5,11 +5,14 @@
  */
 package com.nc.planner.controller;
 
-import com.nc.planner.database.domain.DomainUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.nc.planner.database.service.DomainUserRepo;
+
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  *
@@ -21,14 +24,26 @@ public class HelloController {
     @Autowired
     DomainUserRepo userRepo;
 
+    String loginPage;
+
+    {
+        byte[] encoded = null;
+        try {
+            encoded = Files.readAllBytes(Paths.get("src/main/web/loginPage.html"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        loginPage = new String(encoded, Charset.defaultCharset());
+    }
+
     @RequestMapping("/")
     public String index() {
+        /*
         DomainUser user = new DomainUser();
         user.setName("Sasha");
         user.setPassword("qwerty");
         userRepo.save(user);
-        
-        return "Greetings from Spring Boot!";
+        */
+        return loginPage;
     }
-
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("button").click(function(){
+                var checkLink = "stubCheckUser/" + $("#username").val() + "/" + $("#password").val();
+                $.ajax({url: checkLink, success: function(result){
+                    if (result == "yes") {
+                        window.location.href = "stubGetUsers";
+                    }
+                    else if (result == "no") {
+                        $("#status").html("Status: Wrong User/Password combination");
+                    }
+                }});
+            });
+            $("input").change(function(){
+                $("#status").html("Status: Click 'Log In'");
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <p id="status">status</p>Username:<br>
+
+    <input type="text" id="username" value="">
+    <br>
+    Password:
+    <br>
+    <input type="text" id="password" value="">
+
+    <button>Log In</button>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+Добавить пользователя:
+
+в таблице Object_types создаем запись 'user'  
+в таблице Objects создаем запись 'admin' ('manager','developer' и т.д.)
+в таблице Attribute_types создаем запись 'personal data' ('contacts',  и т.д.)
+в таблице Attributes создаем запись 'name'('password','id','email' и т.д.)
+в таблице Params создаем запись 'John'('qwerty',111,'email@gmail.com' и т.д.)
+
+Добавить задачу:
+
+в таблице Object_types создаем запись 'task'  
+в таблице Objects создаем запись 'database creation' ('server development' и т.д.)
+в таблице Attributes создаем запись 'name'('id','status','owner',...)
+в таблице Params срздаем запись 'task_1'(112,'done' и т.д.)
+
+Добавить проект:
+
+в таблице Object_types создаем запись 'project'  
+в таблице Objects создаем запись 'InternetOfThings' (...)
+в таблице Attributes создаем запись 'name'('id','manager',...)
+в таблице Params срздаем запись 'City Portal'(123,111 и т.д.)
