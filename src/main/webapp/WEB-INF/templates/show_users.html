@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>User List</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <table>
+        <tr>
+            <th>Username</th>
+        </tr>
+        <tr th:each="user : ${@userManager.getUsers()}">
+            <td th:text="${user.username}">Name of User'</td>
+        </tr>
+    </table>
+</body>
+
+</html>

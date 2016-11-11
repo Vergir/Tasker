@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Login</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("button").click(function(){
+                var checkLink = "check_user?username=" + $("#username").val() + "&password=" + $("#password").val();
+                $.ajax({url: checkLink, success: function(result){
+                    if (result == "yes") {
+                        window.location.href = "show_users";
+                    }
+                    else if (result == "no") {
+                        $("#status").html("Wrong User/Password combination");
+                    }
+                }});
+            });
+            $("input").on('input', function(){
+                $("#status").html("Click 'Log In'");
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <p id="status">Click 'Log In'</p>
+
+    Username:<br><input type="text" id="username" value="">
+    <br>
+    Password:<br><input type="text" id="password" value="">
+    <br>
+    <button>Log In</button>
+</body>
+
+</html>
