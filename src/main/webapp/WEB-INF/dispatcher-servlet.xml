@@ -20,7 +20,7 @@
           class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver"
           p:prefix="/WEB-INF/templates/"
           p:suffix=".html"
-          p:templateMode="XHTML" />
+          p:templateMode="HTML" />
     <bean id="templateEngine"
           class="org.thymeleaf.spring4.SpringTemplateEngine"
           p:enableSpringELCompiler="true"
@@ -34,9 +34,5 @@
     <!-- Business Logic -->
     <bean id="userManager"
           class="beans.UserManager" />
-
-    <bean id="user"
-          class="beans.User"
-          p:username="LUL" />
 
 </beans>
