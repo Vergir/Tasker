@@ -1,5 +1,6 @@
 package beans;
 
+import entities.Role;
 import entities.User;
 
 import java.util.ArrayList;
@@ -11,21 +12,24 @@ public class UserManager {
 	public UserManager() {
         //stub
         users = new ArrayList<User>();
-        users.add(new User("Viktor", "vIKTOR"));
-        users.add(new User("Zhenya", "zHENYA"));
-        users.add(new User("Daniil", "dANIIL"));
+        Role admin = Role.ADMIN;
+        users.add(new User("Viktor", "vIKTOR", admin));
+        users.add(new User("Zhenya", "zHENYA", admin));
+        users.add(new User("Daniil", "dANIIL", admin));
 	}
 
     public Collection<User> getUsers() {
         return users;
     }
 
-    public User getRandomUser() {
-        return (User)users.toArray()[(int)Math.floor(Math.random()*users.size())];
+    public User getUser(String username, String password) {
+        for (User u : users)
+            if (u.getUsername().equals(username) && u.getPassword().equals(password))
+                return u;
+        return null;
     }
 
-    public boolean userExists(String username, String password) {
-        User u = new User(username, password);
-        return users.contains(u);
+    public void addUser(String username, String password, Role role) {
+        users.add(new User(username, password, role));
     }
 }
