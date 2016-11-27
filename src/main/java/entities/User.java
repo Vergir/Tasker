@@ -1,41 +1,51 @@
 package entities;
 
+import jpa.Dao;
+import jpa.DbObject;
+import org.mindrot.jbcrypt.BCrypt;
+
 public class User {
-    private String username;
-    private String password;
-    private Role role;
+    private static final long USERNAME_ID = 1;
+    private static final long PASSWORD_ID = 2;
+    private static final long ROLE_ID = 3;
+
+    private DbObject dbObject;
 
     public User() {
+        dbObject = new DbObject();
+    }
+    public User(String username, String password, Role role) {
+        this();
+        dbObject.setTextParamValue(USERNAME_ID, username);
+        dbObject.setTextParamValue(PASSWORD_ID, password);
+        dbObject.setNumericParamValue(ROLE_ID, role.toLong());
     }
 
-    public User(String username, String password, Role role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
+    public long getId() {
+        return dbObject.getObjectId();
     }
 
     public String getUsername() {
-        return username;
+        return dbObject.getTextParamValue(USERNAME_ID);
     }
-
     public void setUsername(String username) {
-        this.username = username;
+        dbObject.setTextParamValue(USERNAME_ID, username);
     }
 
     public String getPassword() {
-        return password;
+        //TODO: replace stub to return dbObject.getTextParamValue(PASSWORD_ID);
+        return BCrypt.hashpw("lol", BCrypt.gensalt());
     }
-
     public void setPassword(String password) {
-        this.password = password;
+        dbObject.setTextParamValue(PASSWORD_ID, password);
     }
 
     public Role getRole() {
-        return role;
+        long roleId = dbObject.getNumericParamValue(ROLE_ID);
+        return (Role)Dao.getObjectById(roleId);
     }
-
     public void setRole(Role role) {
-        this.role = role;
+        dbObject.setNumericParamValue(ROLE_ID, role.getId());
     }
 
     @Override

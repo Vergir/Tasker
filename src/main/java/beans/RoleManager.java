@@ -13,7 +13,7 @@ public class RoleManager {
 
     public RoleManager() {
         roles = new ArrayList<Role>();
-        roles.add(Role.ADMIN);
+        roles.add(new Role("admin", true, true, true));
     }
 
     public Collection<Role> getRoles() {
