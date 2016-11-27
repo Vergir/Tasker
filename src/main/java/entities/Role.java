@@ -12,9 +12,7 @@ public class Role {
 
     private DbObject dbObject;
 
-    public final static Role ADMIN = new Role("Administrator", true, true, true); //TODO: get predefined roles from DB
-
-    private Role(String description, boolean canCreateUsers, boolean canCreateProjects, boolean canAssignDevelopers) {
+    public Role(String description, boolean canCreateUsers, boolean canCreateProjects, boolean canAssignDevelopers) {
         //TODO: implement creating of roles
         this.dbObject = new DbObject();
         this.dbObject.setDescription(description);
@@ -23,6 +21,10 @@ public class Role {
         this.dbObject.setNumericParamValue(CAN_ASSIGN_DEVELOPERS_ID, canAssignDevelopers? 1 : 0);
     }
 
+
+    public long getId() {
+        return dbObject.getObjectId();
+    }
     public String getDescription() {
         return dbObject.getDescription();
     }

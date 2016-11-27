@@ -1,5 +1,6 @@
 package entities;
 
+import jpa.Dao;
 import jpa.DbObject;
 
 /**
@@ -14,20 +15,22 @@ public class Task {
         dbObject = new DbObject();
     }
 
+    public long getId() {
+        return dbObject.getObjectId();
+    }
+
     public String getDescription() {
         return dbObject.getDescription();
     }
-
     public void setDescription(String description) {
         dbObject.setDescription(description);
     }
 
     public User getAssignee() {
-        //???
-        return null;
+        long userId = dbObject.getNumericParamValue(ASSIGNEE_ID);
+        return (User)Dao.getObjectById(userId);
     }
-
     public void setAssignee(User u) {
-        //???
+        dbObject.setNumericParamValue(ASSIGNEE_ID, u.getId());
     }
 }

@@ -1,13 +1,14 @@
 package jpa;
 
-
-import org.mindrot.jbcrypt.BCrypt;
-
 public class DbObject {
     //TODO: Implement DbObject properly
-    private int objectId;
+    private long objectId;
 
     public DbObject(){}
+
+    public long getObjectId() {
+        return objectId;
+    }
 
     public String getDescription() {
         return "stub description";
@@ -22,13 +23,8 @@ public class DbObject {
     }
 
     public long getNumericParamValue(long attributeId) {
-        return 0xF00;
+        return attributeId;
     }
     public void setNumericParamValue(long attributeId, long value) {
-    }
-
-    //stub method, remove completely when implementing this class
-    public String getPassword() {
-        return BCrypt.hashpw("lol", BCrypt.gensalt());
     }
 }

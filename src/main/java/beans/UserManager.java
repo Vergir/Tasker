@@ -13,7 +13,7 @@ public class UserManager {
 	public UserManager() {
         //stub
         users = new ArrayList<User>();
-        Role admin = Role.ADMIN;
+        Role admin = new Role("admin", true, true, true);
         users.add(new User("Viktor", "vIKTOR", admin));
         users.add(new User("Zhenya", "zHENYA", admin));
         users.add(new User("Daniil", "dANIIL", admin));

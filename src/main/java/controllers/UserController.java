@@ -48,13 +48,13 @@ public class UserController implements Serializable{
 
     @RequestMapping(value = "/add_user", method = RequestMethod.GET)
     public String addUser() {
-        if (currentUser == null || currentUser.getRole().getCanCreateUsers() == false)
+        if (currentUser == null || !currentUser.getRole().getCanCreateUsers())
             return "login";
         return "add_user";
     }
     @RequestMapping(value = "/add_user", method = RequestMethod.POST)
     public String addUser(@RequestParam String username, @RequestParam String password, @RequestParam String role) {
-        if (currentUser == null || currentUser.getRole().getCanCreateUsers() == false)
+        if (currentUser == null || !currentUser.getRole().getCanCreateUsers())
             return "login";
         for (Role r : roleManager.getRoles())
             if (r.toString().equals(role)) {

@@ -1,6 +1,8 @@
 package entities;
 
+import jpa.Dao;
 import jpa.DbObject;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class User {
     private static final long USERNAME_ID = 1;
@@ -12,12 +14,15 @@ public class User {
     public User() {
         dbObject = new DbObject();
     }
-
     public User(String username, String password, Role role) {
         this();
         dbObject.setTextParamValue(USERNAME_ID, username);
         dbObject.setTextParamValue(PASSWORD_ID, password);
         dbObject.setNumericParamValue(ROLE_ID, role.toLong());
+    }
+
+    public long getId() {
+        return dbObject.getObjectId();
     }
 
     public String getUsername() {
@@ -29,17 +34,18 @@ public class User {
 
     public String getPassword() {
         //TODO: replace stub to return dbObject.getTextParamValue(PASSWORD_ID);
-        return dbObject.getPassword();
+        return BCrypt.hashpw("lol", BCrypt.gensalt());
     }
     public void setPassword(String password) {
         dbObject.setTextParamValue(PASSWORD_ID, password);
     }
 
     public Role getRole() {
-        return Role.fromLong(dbObject.getNumericParamValue(ROLE_ID));
+        long roleId = dbObject.getNumericParamValue(ROLE_ID);
+        return (Role)Dao.getObjectById(roleId);
     }
     public void setRole(Role role) {
-        dbObject.setNumericParamValue(ROLE_ID, role.toLong());
+        dbObject.setNumericParamValue(ROLE_ID, role.getId());
     }
 
     @Override
