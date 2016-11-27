@@ -7,6 +7,7 @@ import beans.RoleManager;
 import beans.UserManager;
 import entities.Role;
 import entities.User;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -47,13 +48,13 @@ public class UserController implements Serializable{
 
     @RequestMapping(value = "/add_user", method = RequestMethod.GET)
     public String addUser() {
-        if (currentUser == null || currentUser.getRole().isCanCreateUsers() == false)
+        if (currentUser == null || currentUser.getRole().getCanCreateUsers() == false)
             return "login";
         return "add_user";
     }
     @RequestMapping(value = "/add_user", method = RequestMethod.POST)
     public String addUser(@RequestParam String username, @RequestParam String password, @RequestParam String role) {
-        if (currentUser == null || currentUser.getRole().isCanCreateUsers() == false)
+        if (currentUser == null || currentUser.getRole().getCanCreateUsers() == false)
             return "login";
         for (Role r : roleManager.getRoles())
             if (r.toString().equals(role)) {
