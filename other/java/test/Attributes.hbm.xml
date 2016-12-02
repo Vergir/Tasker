@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 01.12.2016 18:08:35 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="test_pkg.Attributes" table="ATTRIBUTES" schema="EVGENY" optimistic-lock="version">
+        <id name="attributeId" type="big_decimal">
+            <column name="ATTRIBUTE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="objectsTypes" class="test_pkg.ObjectsTypes" fetch="select">
+            <column name="OBJECT_TYPE_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="attributeTypes" class="test_pkg.AttributeTypes" fetch="select">
+            <column name="ATTRIBUTE_TYPE_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="NAME" length="50" />
+        </property>
+    </class>
+</hibernate-mapping>
