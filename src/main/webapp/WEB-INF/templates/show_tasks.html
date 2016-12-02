@@ -11,13 +11,10 @@
         <tr>
             <th>Username</th>
         </tr>
-        <tr th:each="user : ${@userManager.getUsers()}">
-            <td><a th:text="${user.username}" th:href="@{/tasks(user=${user.getId()})}">Name of User</a></td>
+        <tr th:each="task : ${tasks}">
+            <td><a th:text="${task.getDescription()}">Task description</a></td>
         </tr>
     </table>
-    <form action="add_user" method="get">
-        <input type="submit" value="Add User">
-    </form>
 </body>
 
 </html>

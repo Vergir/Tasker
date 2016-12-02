@@ -21,7 +21,7 @@ public class User {
         dbObject.setNumericParamValue(ROLE_ID, role.toLong());
     }
 
-    public long getId() {
+    public Long getId() {
         return dbObject.getObjectId();
     }
 

@@ -37,5 +37,7 @@
           class="beans.UserManager" />
     <bean id="roleManager"
           class="beans.RoleManager" />
+    <bean id="taskManager"
+          class="beans.TaskManager" />
 
 </beans>
