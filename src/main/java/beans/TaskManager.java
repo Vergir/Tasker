@@ -21,6 +21,8 @@ public class TaskManager {
     @PostConstruct
     private void init() {
         tasks = new HashSet<Task>();
+        for (int i = 0; i < 25; i++)
+            tasks.add(new Task());
         Task newTask = new Task();
         newTask.setAssignee(userManager.getUsers().iterator().next());
         tasks.add(newTask);

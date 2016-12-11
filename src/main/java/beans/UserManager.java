@@ -52,7 +52,7 @@ public class UserManager {
 	    Set<Task> result = new HashSet<Task>();
 
 	    for (Task t : taskManager.getTasks())
-	        if (t.getAssignee().equals(u))
+            if (Math.random() >= 0.3)//if (t.getAssignee().equals(u))
 	            result.add(t);
 
 	    return result;

@@ -10,26 +10,26 @@
     <div style="width:150px;height:100%;z-index:1;position:fixed;overflow-x:hidden;overflow:scroll;">
         <table>
             <tr>
-                <th>Username</th>
+                <th>Employees</th>
             </tr>
             <tr th:each="user : ${@userManager.getUsers()}">
                 <td><a th:text="${user.username}" th:href="@{/tasks(user=${user.getId()})}">Name of User</a></td>
             </tr>
         </table>
+        <form action="add_user" method="get">
+            <input type="submit" value="Add User">
+        </form>
     </div>
-    <div style="padding-left:300px">
+    <div style="padding-left:150px">
         <table>
             <tr>
-                <th>Username</th>
+                <th>Tasks</th>
             </tr>
-            <tr th:each="user : ${@userManager.getUsers()}">
-                <td><a th:text="${user.username}" th:href="@{/tasks(user=${user.getId()})}">Name of User</a></td>
+            <tr th:each="task : ${tasks}">
+                <td><a th:text="${task.getDescription()}">User Task</a></td>
             </tr>
         </table>
     </div>
-    <form action="add_user" method="get">
-        <input type="submit" value="Add User">
-    </form>
 </body>
 
 </html>

@@ -3,11 +3,15 @@ package jpa;
 public class DbObject {
     //TODO: Implement DbObject properly
     private long objectId;
+    private static int counter;
 
-    public DbObject(){}
+    public DbObject(){
+        counter++;
+    }
 
     public long getObjectId() {
-        return objectId;
+        //return objectId;
+        return counter;
     }
 
     public String getDescription() {

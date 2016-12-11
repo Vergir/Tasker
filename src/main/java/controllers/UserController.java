@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 
 /**
@@ -62,5 +63,16 @@ public class UserController implements Serializable{
 
             }
         return "show_users";
+    }
+
+    @RequestMapping({"/tasks"})
+    public ModelAndView tasks(@RequestParam Long user) {
+        if (currentUser == null)
+            return new ModelAndView("login");
+
+        ModelAndView mav = new ModelAndView("show_users");
+        mav.addObject("activeUser", )
+        mav.addObject("tasks", userManager.getUserTasks(userManager.getUser(user)));
+        return mav;
     }
 }
