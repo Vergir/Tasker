@@ -9,7 +9,7 @@
 <body>
     <table>
         <tr>
-            <th>Username</th>
+            <th>Tasks</th>
         </tr>
         <tr th:each="task : ${tasks}">
             <td><a th:text="${task.getDescription()}">Task description</a></td>

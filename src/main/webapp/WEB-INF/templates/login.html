@@ -21,18 +21,32 @@
             $("input").on('input', function(){
                 $("#status").html("Click 'Log In'");
             });
-        });
+            $("input").keypress(function(e){
+                if(e.keyCode==13)
+                    $("#login").click();
+        });});
     </script>
 </head>
 
 <body>
-    <p id="status">Click 'Log In'</p>
-
-    Username:<br><input type="text" id="username" value=""/>
-    <br>
-    Password:<br><input type="password" id="password" value=""/>
-    <br>
-    <button>Log In</button>
+    <div style="display: table;position: absolute;height: 100%;width: 100%;">
+        <div style="display: table-cell;vertical-align: middle;">
+            <div style="margin-left: auto;margin-right: auto; width: 100%;" align="center">
+                <img src="https://i.imgur.com/g8nBYB4.png"/>
+                <br>
+                Username:
+                <br>
+                <input type="text" id="username" value=""/>
+                <br>
+                Password:
+                <br>
+                <input type="password" id="password" value=""/>
+                <br>
+                <button id="login">Log In</button>
+                <p id="status">Click 'Log In'</p>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
