@@ -71,7 +71,7 @@ public class UserController implements Serializable{
             return new ModelAndView("login");
 
         ModelAndView mav = new ModelAndView("show_users");
-        mav.addObject("activeUser", )
+        mav.addObject("activeUser", null);
         mav.addObject("tasks", userManager.getUserTasks(userManager.getUser(user)));
         return mav;
     }

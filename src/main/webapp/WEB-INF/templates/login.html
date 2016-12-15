@@ -8,7 +8,7 @@
     <script>
         $(document).ready(function(){
             $("button").click(function(){
-                var checkLink = "check_user?username=" + $("#username").val() + "&password=" + $("#password").val();
+                var checkLink = "check_user?username=" + $("#uname").val() + "&password=" + $("#psw").val();
                 $.ajax({url: checkLink, success: function(result){
                     if (result == "yes") {
                         window.location.href = "show_users";
@@ -31,18 +31,15 @@
 <body>
     <div style="display: table;position: absolute;height: 100%;width: 100%;">
         <div style="display: table-cell;vertical-align: middle;">
-            <div style="margin-left: auto;margin-right: auto; width: 100%;" align="center">
-                <img th:src="@{/resource/logo.png}"/>
-                <br>
-                Username:
-                <br>
-                <input type="text" id="username" value=""/>
-                <br>
-                Password:
-                <br>
-                <input type="password" id="password" value=""/>
-                <br>
-                <button id="login">Log In</button>
+            <div style="margin-left: auto;margin-right: auto; width: 250px; border: 1px solid #c1c1c1" align="center">
+                <img th:src="@{/resource/logo.png}"/><br>
+                <label><b>Username</b></label><br>
+                <input type="text" placeholder="Enter Username" id="uname" required><br>
+
+                <label><b>Password</b></label><br>
+                <input type="password" placeholder="Enter Password" id="psw" required><br>
+
+                <button id="login" type="submit">Login</button><br>
                 <p id="status">Click 'Log In'</p>
             </div>
         </div>

@@ -5,9 +5,12 @@
     <title>User List</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
-
+<link rel="stylesheet"
+      th:href="@{/resource/main.css}">
 <body>
-    <div style="width:150px;height:100%;z-index:1;position:fixed;overflow-x:hidden;overflow:scroll;">
+    <nav class="w3-sidenav
+                 w3-light-grey w3-card-2"
+         style="width:15%">
         <table>
             <tr>
                 <th>Employees</th>
@@ -16,11 +19,25 @@
                 <td><a th:text="${user.username}" th:href="@{/tasks(user=${user.getId()})}">Name of User</a></td>
             </tr>
         </table>
-        <form action="add_user" method="get">
+        <div>
+            <ul class="w3-pagination w3-border w3-round">
+                <li><a href="#">&#10094; Prev</a></li>
+                <li><a href="#">Next &#10095;</a></li>
+            </ul>
+        </div>
+        <form style="margin: 5px" action="add_user" method="get">
             <input type="submit" value="Add User">
         </form>
-    </div>
-    <div style="padding-left:150px">
+    </nav>
+
+    <div style="margin-left:15%">
+        <header class="w3-container w3-blue">
+            <h1>Tasker Project</h1>
+        </header>
+        <div class="w3-container">
+            <h2>Employee Tasks</h2>
+        </div>
+        <p>Example Task Descriptions</p>
         <table>
             <tr>
                 <th>Tasks</th>

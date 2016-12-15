@@ -19,10 +19,10 @@ public class UserManager {
 	public UserManager() {
         //stub
         users = new ArrayList<User>();
+
         Role admin = new Role("admin", true, true, true);
-        users.add(new User("Viktor", "vIKTOR", admin));
-        users.add(new User("Zhenya", "zHENYA", admin));
-        users.add(new User("Daniil", "dANIIL", admin));
+        for (int i = 0; i < 50; i++)
+            users.add(new User(""+i, ""+i, admin));
 	}
 
     public Collection<User> getUsers() {
