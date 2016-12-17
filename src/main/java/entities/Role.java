@@ -16,9 +16,9 @@ public class Role {
         //TODO: implement creating of roles
         this.dbObject = new DbObject();
         this.dbObject.setDescription(description);
-        this.dbObject.setNumericParamValue(CAN_CREATE_USERS_ID, canCreateUsers ? 1 : 0);
-        this.dbObject.setNumericParamValue(CAN_CREATE_PROJECTS_ID, canCreateProjects ? 1 : 0);
-        this.dbObject.setNumericParamValue(CAN_ASSIGN_DEVELOPERS_ID, canAssignDevelopers? 1 : 0);
+        this.dbObject.setNumParam(CAN_CREATE_USERS_ID, Long.valueOf(canCreateUsers ? 1 : 0));
+        this.dbObject.setNumParam(CAN_CREATE_PROJECTS_ID, Long.valueOf(canCreateProjects ? 1 : 0));
+        this.dbObject.setNumParam(CAN_ASSIGN_DEVELOPERS_ID, Long.valueOf(canAssignDevelopers? 1 : 0));
     }
 
 
@@ -29,13 +29,13 @@ public class Role {
         return dbObject.getDescription();
     }
     public boolean getCanCreateUsers() {
-        return dbObject.getNumericParamValue(CAN_CREATE_USERS_ID) != 0;
+        return dbObject.getNumParam(CAN_CREATE_USERS_ID) != 0;
     }
     public boolean getCanCreateProjects() {
-        return dbObject.getNumericParamValue(CAN_CREATE_PROJECTS_ID) != 0;
+        return dbObject.getNumParam(CAN_CREATE_PROJECTS_ID) != 0;
     }
     public boolean getCanAssignDevelopers() {
-        return dbObject.getNumericParamValue(CAN_ASSIGN_DEVELOPERS_ID) != 0;
+        return dbObject.getNumParam(CAN_ASSIGN_DEVELOPERS_ID) != 0;
     }
 
     public static Role fromLong(long role) {

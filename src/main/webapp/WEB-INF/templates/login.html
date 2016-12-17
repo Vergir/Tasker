@@ -10,11 +10,11 @@
             $("button").click(function(){
                 var checkLink = "check_user?username=" + $("#uname").val() + "&password=" + $("#psw").val();
                 $.ajax({url: checkLink, success: function(result){
-                    if (result == "yes") {
-                        window.location.href = "show_users";
-                    }
-                    else if (result == "no") {
+                    if (result == "no") {
                         $("#status").html("Wrong User/Password combination");
+                    }
+                    else {
+                        window.location.href = "tasks?user="+result;
                     }
                 }});
             });
@@ -39,7 +39,7 @@
                 <label><b>Password</b></label><br>
                 <input type="password" placeholder="Enter Password" id="psw" required><br>
 
-                <button id="login" type="submit">Login</button><br>
+                <button id="login" type="submit">Log In</button><br>
                 <p id="status">Click 'Log In'</p>
             </div>
         </div>

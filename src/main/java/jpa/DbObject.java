@@ -1,34 +1,61 @@
 package jpa;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class DbObject {
+
+    static List<String> stubTextParams = new ArrayList<String>();
+    static List<String> stubDescriptions = new ArrayList<String>();
+    static {
+        stubTextParams.add("first");
+        stubTextParams.add("second");
+        stubDescriptions.add("desc one");
+        stubDescriptions.add("desc two");
+    }
+
+    Map<Long, String> textParams = new HashMap<Long, String>();
+    Map<Long, Long> numParams = new HashMap<Long, Long>();
+    String description = "";
+
     //TODO: Implement DbObject properly
     private long objectId;
-    private static int counter;
+    private static Long counter = Long.valueOf(1);
 
     public DbObject(){
-        counter++;
+        objectId = counter++;
     }
 
     public long getObjectId() {
-        //return objectId;
-        return counter;
+        return objectId;
     }
-
     public String getDescription() {
-        return "stub description";
+        return description;
     }
+    public String getTextParam(long attributeId) {
+        if (!textParams.containsKey(attributeId))
+            textParams.put(attributeId, stubTextParams.get(Double.valueOf(Math.random()*stubTextParams.size()).intValue()));
+        return textParams.get(attributeId);
+    }
+    public Long getNumParam(long attributeId) {
+        if (!numParams.containsKey(attributeId))
+            numParams.put(attributeId, counter);
+        return numParams.get(attributeId);
+    }
+
+
     public void setDescription(String description) {
+        this.description = description;
     }
-
-    public String getTextParamValue(long attributeId){
-        return "stubTPV";
+    public void setObjectId(long objectId) {
+        this.objectId = objectId;
     }
-    public void setTextParamValue(long attributeId, String value) {
+    public void setTextParam(long attributeId, String value) {
+        textParams.put(attributeId, value);
     }
-
-    public long getNumericParamValue(long attributeId) {
-        return attributeId;
-    }
-    public void setNumericParamValue(long attributeId, long value) {
+    public void setNumParam(long attributeId, Long value) {
+        numParams.put(attributeId, value);
     }
 }

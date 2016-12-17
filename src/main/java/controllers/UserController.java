@@ -5,6 +5,7 @@ import java.util.Map;
 
 import beans.RoleManager;
 import beans.UserManager;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import entities.Role;
 import entities.User;
 import org.mindrot.jbcrypt.BCrypt;
@@ -30,9 +31,9 @@ public class UserController implements Serializable{
 
     public UserController() {}
 
-    @RequestMapping({"/","/login","/show_users"})
+    @RequestMapping({"/","/login"})
     public String showIndexPage(Map<String, Object> model) {
-        return (currentUser != null) ? "show_users" : "login";
+        return (currentUser != null) ? "tasks" : "login";
     }
 
     @RequestMapping({"/check_user"})
@@ -41,7 +42,7 @@ public class UserController implements Serializable{
         User attempter = userManager.getUser(username, password);
         if (attempter != null) {
             currentUser = attempter;
-            return "yes";
+            return currentUser.getId().toString();
         }
         else
             return "no";
@@ -62,17 +63,25 @@ public class UserController implements Serializable{
                 userManager.addUser(username, password, r);
 
             }
-        return "show_users";
+        return "tasks";
     }
 
     @RequestMapping({"/tasks"})
-    public ModelAndView tasks(@RequestParam Long user) {
+    public ModelAndView tasks(@RequestParam(required = false) Long user) {
         if (currentUser == null)
             return new ModelAndView("login");
-
-        ModelAndView mav = new ModelAndView("show_users");
-        mav.addObject("activeUser", null);
-        mav.addObject("tasks", userManager.getUserTasks(userManager.getUser(user)));
+        if (user == null)
+            user = currentUser.getId();
+        ModelAndView mav = new ModelAndView("tasks");
+        User u = userManager.getUser(user);
+        mav.addObject("userTasks", u.getUsername()+"'s Tasks");
+        mav.addObject("tasks", userManager.getUserTasks(u));
         return mav;
+    }
+
+    @RequestMapping({"/log_out"})
+    public ModelAndView logOut() {
+        currentUser = null;
+        return new ModelAndView("login");
     }
 }

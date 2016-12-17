@@ -8,9 +8,7 @@
 <link rel="stylesheet"
       th:href="@{/resource/main.css}">
 <body>
-    <nav class="w3-sidenav
-                 w3-light-grey w3-card-2"
-         style="width:15%">
+    <nav class="w3-sidenav w3-light-grey w3-card-2" style="width:15%">
         <table>
             <tr>
                 <th>Employees</th>
@@ -28,6 +26,9 @@
         <form style="margin: 5px" action="add_user" method="get">
             <input type="submit" value="Add User">
         </form>
+        <form style="margin: 5px" action="log_out" method="get">
+            <input type="submit" value="Log Out">
+        </form>
     </nav>
 
     <div style="margin-left:15%">
@@ -35,13 +36,9 @@
             <h1>Tasker Project</h1>
         </header>
         <div class="w3-container">
-            <h2>Employee Tasks</h2>
+            <h2 th:text="${userTasks}"></h2>
         </div>
-        <p>Example Task Descriptions</p>
         <table>
-            <tr>
-                <th>Tasks</th>
-            </tr>
             <tr th:each="task : ${tasks}">
                 <td><a th:text="${task.getDescription()}">User Task</a></td>
             </tr>
