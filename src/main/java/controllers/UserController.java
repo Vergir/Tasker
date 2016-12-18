@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import beans.RoleManager;
+import beans.TaskManager;
 import beans.UserManager;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import entities.Role;
+import entities.Task;
 import entities.User;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class UserController implements Serializable{
     UserManager userManager;
     @Autowired
     RoleManager roleManager;
+    @Autowired
+    TaskManager taskManager;
 
     User currentUser = null;
 
@@ -50,22 +54,26 @@ public class UserController implements Serializable{
             return "no";
     }
 
-    @RequestMapping(value = "/add_user", method = RequestMethod.GET)
-    public String addUser() {
-        if (currentUser == null || !currentUser.getRole().getCanCreateUsers())
-            return "login";
-        return "add_user";
-    }
     @RequestMapping(value = "/add_user", method = RequestMethod.POST)
-    public String addUser(@RequestParam String username, @RequestParam String password, @RequestParam String role) {
+    public ModelAndView addUser(@RequestParam String username, @RequestParam String password, @RequestParam String role) {
         if (currentUser == null || !currentUser.getRole().getCanCreateUsers())
-            return "login";
+            return new ModelAndView("login");
         for (Role r : roleManager.getRoles())
-            if (r.toString().equals(role)) {
+            if (r.toString().equals(role))
                 userManager.addUser(username, password, r);
+        return tasks(null, Integer.MAX_VALUE);
+    }
+    @RequestMapping(value = "/add_task", method = RequestMethod.POST)
+    public ModelAndView addTask(@RequestParam String taskDesc, @RequestParam String assigneeName) {
+        if (currentUser == null || !currentUser.getRole().getCanCreateUsers())
+            return new ModelAndView("login");
+        User assignee = null;
+        for (User u : userManager.getUsers())
+            if (u.getUsername().equals(assigneeName))
+                assignee = u;
+        taskManager.addTask(new Task(taskDesc, assignee.getId()));
 
-            }
-        return "tasks";
+        return tasks(assignee.getId(), null);
     }
 
     @RequestMapping({"/tasks"})
@@ -92,7 +100,10 @@ public class UserController implements Serializable{
 
         ModelAndView mav = new ModelAndView("tasks");
         User u = userManager.getUser(user);
-        mav.addObject("currentUser", user);
+        mav.addObject("pageLowerLimit", page == 1);
+        mav.addObject("pageUpperLimit", page*USERS_PER_PAGE >= allUsers.size());
+        mav.addObject("currentUser", currentUser);
+        mav.addObject("activeUserId", user);
         mav.addObject("page", page);
         mav.addObject("users", usersOnPage);
         mav.addObject("userTasks", u.getUsername()+"'s Tasks");

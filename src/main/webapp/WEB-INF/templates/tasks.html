@@ -4,23 +4,53 @@
 <head>
     <title>User List</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script>
+        window.onload = function(){
+            var modalUser = document.getElementById('modal-user');
+            var modalTask = document.getElementById('modal-task');
+            var userBtn = document.getElementById("addUserBtn");
+            var taskBtn = document.getElementById("addTaskBtn");
+            var span1 = document.getElementsByClassName("close")[0];
+            var span2 = document.getElementsByClassName("close")[1];
+            userBtn.onclick = function () {
+                modalUser.style.display = "block";
+            }
+            taskBtn.onclick = function () {
+                modalTask.style.display = "block";
+            }
+            span1.onclick = function () {
+                modalUser.style.display = "none";
+            }
+            span2.onclick = function () {
+                modalTask.style.display = "none";
+            }
+        }
+
+        window.onclick = function(event) {
+            if (event.target != modalUser && event.target != modalTask) {
+                modalUser.style.display = "none";
+                modalTask.style.display = "none";
+            }
+        }
+    </script>
 </head>
 <link rel="stylesheet"
       th:href="@{/resource/main.css}">
 <body>
     <nav class="w3-sidenav w3-light-grey w3-card-2" style="width:15%">
-        <table>
+        <table style="height: 90%">
             <tr>
                 <th>Employees</th>
             </tr>
             <tr th:each="user : ${users}">
-                <td><a th:text="${user.username}" th:href="@{/tasks(user=${user.id},page=${page})}">Name of User</a></td>
+                <td th:classappend="${user.getId().equals(activeUserId)} ? active-user"><a th:text="${user.username}" th:href="@{/tasks(user=${user.id},page=${page})}">Name of User</a></td>
             </tr>
         </table>
-        <div>
+        <div style="position: fixed; bottom: 0; width: 100%; margin: 10px">
             <ul class="w3-pagination w3-border w3-round">
-                <li><a th:href="@{/tasks(user=${currentUser},page=${page}-1)}">&#10094; Prev</a></li>
-                <li><a th:href="@{/tasks(user=${currentUser},page=${page}+1)}">Next &#10095;</a></li>
+                <li th:classappend="${pageLowerLimit} ? disabled">
+                    <a th:href="@{/tasks(user=${activeUserId},page=${page}-1)}">&#10094; Prev</a></li>
+                <li th:classappend="${pageUpperLimit} ? disabled"><a th:href="@{/tasks(user=${activeUserId},page=${page}+1)}">Next &#10095;</a></li>
             </ul>
         </div>
     </nav>
@@ -28,12 +58,11 @@
     <div style="margin-left:15%">
         <header class="w3-container w3-blue">
             <h1 style="display: inline">Tasker Project</h1>
-            <form style="float:right; display: inline; margin:5px;margin-top:15px" action="log_out" method="get">
+            <form class="header-button" action="log_out" method="get" style="margin-left:25px">
                 <input type="submit" value="Log Out">
             </form>
-            <form style="float:right;display: inline; margin: 10px;margin-top:15px" action="add_user" method="get">
-                <input type="submit" value="Add User">
-            </form>
+            <button class="header-button" id="addTaskBtn">Add Task</button>
+            <button class="header-button" id="addUserBtn">Add User</button>
         </header>
         <div class="w3-container">
             <h2 th:text="${userTasks}"></h2>
@@ -43,6 +72,40 @@
                 <td><a th:text="${task.description}">User Task</a></td>
             </tr>
         </table>
+    </div>
+
+
+    <div id="modal-user" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form action="add_user" method="post" id="userform">
+                <label><b>Role</b></label><br>
+                <select id="role" name="role" form="userform">
+                    <option th:each="role : ${@roleManager.getRoles()}" th:value="${role.toString()}" th:text="${role.toString()}"/>
+                </select><br><br>
+                <label><b>Username</b></label><br>
+                <input type="text" placeholder="Enter Username" id="username" name="username" required><br><br>
+
+                <label><b>Password</b></label><br>
+                <input type="text" placeholder="Enter Password" id="password" name="password" required><br><br><br>
+                <input style="font-size: large" type="submit" value="Add User"/><br>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-task" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form action="add_task" method="post" id="taskform">
+                <label><b>Task Description</b></label><br>
+                <textarea style="width:300px;height:100px; resize: vertical" name="taskDesc" id="taskDesc" form="taskform" required></textarea><br>
+                <label><b>Assigned Employee</b></label><br>
+                <select id="assigneeName" name="assigneeName" form="taskform">
+                    <option th:each="user : ${@userManager.getUsers()}" th:value="${user.username}" th:text="${user.username}"/>
+                </select><br><br>
+                <input style="font-size: large" type="submit" value="Create Task"/><br>
+            </form>
+        </div>
     </div>
 </body>
 
