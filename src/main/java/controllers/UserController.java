@@ -1,6 +1,8 @@
 package controllers;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import beans.RoleManager;
@@ -67,13 +69,32 @@ public class UserController implements Serializable{
     }
 
     @RequestMapping({"/tasks"})
-    public ModelAndView tasks(@RequestParam(required = false) Long user) {
+    public ModelAndView tasks(@RequestParam(required = false) Long user,
+                              @RequestParam(required = false) Integer page) {
+        final int USERS_PER_PAGE = 15;
+
         if (currentUser == null)
             return new ModelAndView("login");
         if (user == null)
             user = currentUser.getId();
+        if (page == null)
+            page = 1 + userManager.getUsers().indexOf(userManager.getUser(user)) / USERS_PER_PAGE;
+        else if (page < 1)
+            page = 1;
+        else if (page*USERS_PER_PAGE > userManager.getUsers().size())
+            page = userManager.getUsers().size() / USERS_PER_PAGE + ((userManager.getUsers().size() % USERS_PER_PAGE > 0) ? 1 : 0);
+
+        List<User> allUsers = userManager.getUsers();
+        List<User> usersOnPage = new ArrayList<User>();
+        int upperLimit = page*USERS_PER_PAGE < allUsers.size() ? page*USERS_PER_PAGE : allUsers.size();
+        for (int i = (page-1)*USERS_PER_PAGE; i < upperLimit; i++)
+            usersOnPage.add(allUsers.get(i));
+
         ModelAndView mav = new ModelAndView("tasks");
         User u = userManager.getUser(user);
+        mav.addObject("currentUser", user);
+        mav.addObject("page", page);
+        mav.addObject("users", usersOnPage);
         mav.addObject("userTasks", u.getUsername()+"'s Tasks");
         mav.addObject("tasks", userManager.getUserTasks(u));
         return mav;

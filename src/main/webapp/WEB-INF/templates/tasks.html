@@ -13,34 +13,34 @@
             <tr>
                 <th>Employees</th>
             </tr>
-            <tr th:each="user : ${@userManager.getUsers()}">
-                <td><a th:text="${user.username}" th:href="@{/tasks(user=${user.getId()})}">Name of User</a></td>
+            <tr th:each="user : ${users}">
+                <td><a th:text="${user.username}" th:href="@{/tasks(user=${user.id},page=${page})}">Name of User</a></td>
             </tr>
         </table>
         <div>
             <ul class="w3-pagination w3-border w3-round">
-                <li><a href="#">&#10094; Prev</a></li>
-                <li><a href="#">Next &#10095;</a></li>
+                <li><a th:href="@{/tasks(user=${currentUser},page=${page}-1)}">&#10094; Prev</a></li>
+                <li><a th:href="@{/tasks(user=${currentUser},page=${page}+1)}">Next &#10095;</a></li>
             </ul>
         </div>
-        <form style="margin: 5px" action="add_user" method="get">
-            <input type="submit" value="Add User">
-        </form>
-        <form style="margin: 5px" action="log_out" method="get">
-            <input type="submit" value="Log Out">
-        </form>
     </nav>
 
     <div style="margin-left:15%">
         <header class="w3-container w3-blue">
-            <h1>Tasker Project</h1>
+            <h1 style="display: inline">Tasker Project</h1>
+            <form style="float:right; display: inline; margin:5px;margin-top:15px" action="log_out" method="get">
+                <input type="submit" value="Log Out">
+            </form>
+            <form style="float:right;display: inline; margin: 10px;margin-top:15px" action="add_user" method="get">
+                <input type="submit" value="Add User">
+            </form>
         </header>
         <div class="w3-container">
             <h2 th:text="${userTasks}"></h2>
         </div>
         <table>
             <tr th:each="task : ${tasks}">
-                <td><a th:text="${task.getDescription()}">User Task</a></td>
+                <td><a th:text="${task.description}">User Task</a></td>
             </tr>
         </table>
     </div>

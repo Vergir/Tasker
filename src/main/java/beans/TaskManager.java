@@ -43,4 +43,8 @@ public class TaskManager {
     public Set<Task> getTasks() {
         return tasks;
     }
+
+    public void addTask(Task t) {
+        tasks.add(t);
+    }
 }

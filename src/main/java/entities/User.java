@@ -53,9 +53,7 @@ public class User {
 
         User user = (User) o;
 
-        if (!getUsername().equals(user.getUsername())) return false;
-        return getPassword().equals(user.getPassword());
-
+        return getId().equals(user.getId());
     }
 
     @Override
