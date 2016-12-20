@@ -40,7 +40,7 @@ public class User {
     }
 
     public Role getRole() {
-        return Role.fromLong(dbObject.getNumParam(ROLE_ID));
+        return new Role(dbObject.getNumParam(ROLE_ID));
     }
     public void setRole(Role role) {
         dbObject.setNumParam(ROLE_ID, role.getId());

@@ -25,7 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 @Scope("session")
-public class UserController implements Serializable{
+public class MainController implements Serializable{
     @Autowired
     UserManager userManager;
     @Autowired
@@ -35,7 +35,7 @@ public class UserController implements Serializable{
 
     User currentUser = null;
 
-    public UserController() {}
+    public MainController() {}
 
     @RequestMapping({"/","/login"})
     public String showIndexPage(Map<String, Object> model) {
@@ -65,7 +65,7 @@ public class UserController implements Serializable{
     }
     @RequestMapping(value = "/add_task", method = RequestMethod.POST)
     public ModelAndView addTask(@RequestParam String taskDesc, @RequestParam String assigneeName) {
-        if (currentUser == null || !currentUser.getRole().getCanCreateUsers())
+        if (currentUser == null || !currentUser.getRole().getCanAssignDevelopers())
             return new ModelAndView("login");
         User assignee = null;
         for (User u : userManager.getUsers())
@@ -97,7 +97,7 @@ public class UserController implements Serializable{
         int upperLimit = page*USERS_PER_PAGE < allUsers.size() ? page*USERS_PER_PAGE : allUsers.size();
         for (int i = (page-1)*USERS_PER_PAGE; i < upperLimit; i++)
             usersOnPage.add(allUsers.get(i));
-
+        //...some code omitted for brevity
         ModelAndView mav = new ModelAndView("tasks");
         User u = userManager.getUser(user);
         mav.addObject("pageLowerLimit", page == 1);

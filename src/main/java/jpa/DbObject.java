@@ -19,6 +19,7 @@ public class DbObject {
     Map<Long, String> textParams = new HashMap<Long, String>();
     Map<Long, Long> numParams = new HashMap<Long, Long>();
     String description = "";
+    static List<DbObject> pool =  new ArrayList<DbObject>();
 
     //TODO: Implement DbObject properly
     private long objectId;
@@ -26,6 +27,14 @@ public class DbObject {
 
     public DbObject(){
         objectId = counter++;
+        pool.add(this);
+    }
+
+    public static DbObject find(long id) {
+        for (DbObject dbo : pool)
+            if (dbo.getObjectId() == id)
+                return dbo;
+        return null;
     }
 
     public long getObjectId() {

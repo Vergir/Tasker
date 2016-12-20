@@ -6,6 +6,7 @@ import entities.User;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 public class UserManager {
@@ -130,18 +131,35 @@ public class UserManager {
     private List<User> users;
     @Autowired
     TaskManager taskManager;
+    @Autowired
+    RoleManager roleManager;
 
 	public UserManager() {
-        //stub
         users = new ArrayList<User>();
-
-        Role admin = new Role("admin", true, true, true);
         for (String name : names)
-            users.add(new User(name, name+name, admin));
+            users.add(new User(name, name+name, new Role("none", false, false, false)));
+        users.add(new User("[admin]", "adminadmin", new Role("Chief Admin", true, true, true)));
 	}
 
+	@PostConstruct
+    private void init() {
+        int i = 0;
+        Role[] roles = roleManager.getRoles().toArray(new Role[]{});
+
+        for (User u : users)
+            if (u.getRole().getDescription().equals("none"))
+                u.setRole(roles[i++ % 3]);
+    }
+
+
     public List<User> getUsers() {
-        return users;
+	    List<User> result = new ArrayList<User>(users);
+	    User admin = null;
+	    for (User u : result)
+	        if (u.getUsername().equals("[admin]"))
+	            admin = u;
+	    result.remove(admin);
+        return result;
     }
 
     public User getUser(String username, String password) {

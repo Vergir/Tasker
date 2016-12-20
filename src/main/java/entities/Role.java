@@ -20,6 +20,9 @@ public class Role {
         this.dbObject.setNumParam(CAN_CREATE_PROJECTS_ID, Long.valueOf(canCreateProjects ? 1 : 0));
         this.dbObject.setNumParam(CAN_ASSIGN_DEVELOPERS_ID, Long.valueOf(canAssignDevelopers? 1 : 0));
     }
+    public Role(long id) {
+        this.dbObject = DbObject.find(id);
+    }
 
 
     public long getId() {
@@ -49,7 +52,7 @@ public class Role {
         role -= canCreateProjects ? 2 : 0;
         canCreateUsers = role >= 1;
 
-        return new Role("created from number", canCreateUsers, canCreateProjects, canAssignDevelopers);
+        return new Role("none", canCreateUsers, canCreateProjects, canAssignDevelopers);
     }
 
     public long toLong() {
