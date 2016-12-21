@@ -41,28 +41,6 @@ public class Role {
         return dbObject.getNumParam(CAN_ASSIGN_DEVELOPERS_ID) != 0;
     }
 
-    public static Role fromLong(long role) {
-        boolean canCreateUsers;
-        boolean canCreateProjects;
-        boolean canAssignDevelopers;
-
-        canAssignDevelopers = role >= 4;
-        role -= canAssignDevelopers ? 4 : 0;
-        canCreateProjects = role >= 2;
-        role -= canCreateProjects ? 2 : 0;
-        canCreateUsers = role >= 1;
-
-        return new Role("none", canCreateUsers, canCreateProjects, canAssignDevelopers);
-    }
-
-    public long toLong() {
-        long result = 0;
-        result += getCanCreateUsers() ? 1 : 0;
-        result += getCanCreateProjects() ? 2 : 0;
-        result += getCanAssignDevelopers() ? 4 : 0;
-        return result;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

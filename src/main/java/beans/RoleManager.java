@@ -11,6 +11,9 @@ import java.util.Set;
  */
 public class RoleManager {
     private Set<Role> roles;
+    public static final Role NO_ROLE = new Role("none", false, false, false);
+    public static final Role CHIEF_ADMIN = new Role("Chief Admin", true, true, true);
+
 
     public RoleManager() {
         roles = new HashSet<Role>();
@@ -21,5 +24,12 @@ public class RoleManager {
 
     public Set<Role> getRoles() {
         return roles;
+    }
+
+    public Role getRole(String name) {
+        for (Role r : roles)
+            if (r.getDescription().toLowerCase().equals(name.toLowerCase()))
+                return r;
+        return null;
     }
 }

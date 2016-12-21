@@ -5,19 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import beans.RoleManager;
-import beans.TaskManager;
-import beans.UserManager;
+import beans.*;
 import com.sun.org.apache.xpath.internal.operations.Mod;
-import entities.Role;
-import entities.Task;
-import entities.User;
+import entities.*;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
 /**
@@ -32,6 +29,10 @@ public class MainController implements Serializable{
     RoleManager roleManager;
     @Autowired
     TaskManager taskManager;
+    @Autowired
+    TaskStatusManager taskStatusManager;
+    @Autowired
+    PriorityManager priorityManager;
 
     User currentUser = null;
 
@@ -58,20 +59,23 @@ public class MainController implements Serializable{
     public ModelAndView addUser(@RequestParam String username, @RequestParam String password, @RequestParam String role) {
         if (currentUser == null || !currentUser.getRole().getCanCreateUsers())
             return new ModelAndView("login");
-        for (Role r : roleManager.getRoles())
-            if (r.toString().equals(role))
-                userManager.addUser(username, password, r);
+                userManager.addUser(username, password, roleManager.getRole(role));
         return tasks(null, Integer.MAX_VALUE);
     }
     @RequestMapping(value = "/add_task", method = RequestMethod.POST)
-    public ModelAndView addTask(@RequestParam String taskDesc, @RequestParam String assigneeName) {
+    public ModelAndView addTask(@RequestParam String taskDesc,
+                                @RequestParam String assigneeName,
+                                @RequestParam String status,
+                                @RequestParam String priority) {
         if (currentUser == null || !currentUser.getRole().getCanAssignDevelopers())
             return new ModelAndView("login");
         User assignee = null;
         for (User u : userManager.getUsers())
             if (u.getUsername().equals(assigneeName))
                 assignee = u;
-        taskManager.addTask(new Task(taskDesc, assignee.getId()));
+        TaskStatus taskStatus = taskStatusManager.getTaskStatus(status);
+        Priority prio = priorityManager.getPriority(priority);
+        taskManager.addTask(new Task(taskDesc, assignee.getId(), taskStatus, prio));
 
         return tasks(assignee.getId(), null);
     }
@@ -103,10 +107,9 @@ public class MainController implements Serializable{
         mav.addObject("pageLowerLimit", page == 1);
         mav.addObject("pageUpperLimit", page*USERS_PER_PAGE >= allUsers.size());
         mav.addObject("currentUser", currentUser);
-        mav.addObject("activeUserId", user);
+        mav.addObject("activeUser", u);
         mav.addObject("page", page);
         mav.addObject("users", usersOnPage);
-        mav.addObject("userTasks", u.getUsername()+"'s Tasks");
         mav.addObject("tasks", userManager.getUserTasks(u));
         return mav;
     }

@@ -39,5 +39,9 @@
           class="beans.RoleManager" />
     <bean id="taskManager"
           class="beans.TaskManager" />
+    <bean id="priorityManager"
+          class="beans.PriorityManager" />
+    <bean id="taskStatusManager"
+          class="beans.TaskStatusManager" />
 
 </beans>

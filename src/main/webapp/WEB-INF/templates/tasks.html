@@ -43,7 +43,7 @@
                 <th>Employees</th>
             </tr>
             <tr th:each="user : ${users}">
-                <td th:classappend="${user.getId().equals(activeUserId)} ? active-user"><a th:text="${user.username}" th:href="@{/tasks(user=${user.id},page=${page})}">Name of User</a></td>
+                <td th:classappend="${user.getId().equals(activeUser.id)} ? active-user"><a th:text="${user.username}" th:href="@{/tasks(user=${user.id},page=${page})}">Name of User</a></td>
             </tr>
         </table>
         <div style="position: fixed; bottom: 0; width: 100%; margin: 10px">
@@ -66,11 +66,18 @@
             <button th:classappend="${!currentUser.role.getCanCreateUsers()} ? disabled" class="header-button" id="addUserBtn">Add User</button>
         </header>
         <div class="w3-container">
-            <h2 th:text="${userTasks}"></h2>
+            <h2 th:text="${activeUser.username}+'\'s Tasks'"></h2>
         </div>
-        <table>
-            <tr th:each="task : ${tasks}">
-                <td><a th:text="${task.description}">User Task</a></td>
+        <table class="w3-table w3-bordered">
+            <tr>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Priority</th>
+            </tr>
+            <tr th:each="task : ${tasks}" th:classappend="${task.status.description.equals('Closed')} ? disabled">
+                <td th:text="${task.description}"></td>
+                <td th:text="${task.status.description}"></td>
+                <td th:text="${task.priority.description}"></td>
             </tr>
         </table>
     </div>
@@ -81,14 +88,14 @@
             <span class="close">&times;</span>
             <form action="add_user" method="post" id="userform">
                 <label><b>Role</b></label><br>
-                <select id="role" name="role" form="userform">
-                    <option th:each="role : ${@roleManager.getRoles()}" th:value="${role.toString()}" th:text="${role.toString()}"/>
+                <select name="role" form="userform">
+                    <option th:each="role : ${@roleManager.roles}" th:text="${role.description}"/>
                 </select><br><br>
                 <label><b>Username</b></label><br>
-                <input type="text" placeholder="Enter Username" id="username" name="username" required><br><br>
+                <input type="text" placeholder="Enter Username" name="username" required><br><br>
 
                 <label><b>Password</b></label><br>
-                <input type="text" placeholder="Enter Password" id="password" name="password" required><br><br><br>
+                <input type="text" placeholder="Enter Password" name="password" required><br><br><br>
                 <input style="font-size: large" type="submit" value="Add User"/><br>
             </form>
         </div>
@@ -101,8 +108,16 @@
                 <label><b>Task Description</b></label><br>
                 <textarea style="width:300px;height:100px; resize: vertical" name="taskDesc" id="taskDesc" form="taskform" required></textarea><br>
                 <label><b>Assigned Employee</b></label><br>
-                <select id="assigneeName" name="assigneeName" form="taskform">
-                    <option th:each="user : ${@userManager.getUsers()}" th:value="${user.username}" th:text="${user.username}"/>
+                <select name="assigneeName" form="taskform">
+                    <option th:each="user : ${@userManager.users}" th:value="${user.username}" th:text="${user.username}"/>
+                </select><br>
+                <label><b>Task Status</b></label><br>
+                <select name="status" form="taskform">
+                    <option th:each="status : ${@taskStatusManager.statuses}" th:text="${status.description}"/>
+                </select><br>
+                <label><b>Task Priority</b></label><br>
+                <select name="priority" form="taskform">
+                    <option th:each="prio : ${@priorityManager.priorities}" th:text="${prio.description}"/>
                 </select><br><br>
                 <input style="font-size: large" type="submit" value="Create Task"/><br>
             </form>
