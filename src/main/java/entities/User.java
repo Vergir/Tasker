@@ -13,6 +13,9 @@ public class User {
     public User() {
         dbObject = new DbObject();
     }
+    public User(Long id) {
+        dbObject = DbObject.find(id);
+    }
     public User(String username, String password, Role role) {
         this();
         setUsername(username);

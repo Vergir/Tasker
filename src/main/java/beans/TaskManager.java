@@ -48,7 +48,7 @@ public class TaskManager {
         Set<Priority> prios = priorityManager.getPriorities();
         Set<TaskStatus> statuses = taskStatusManager.getStatuses();
         for (String desc : taskDescs)
-            tasks.add(new Task(desc, Util.randomFrom(users).getId(), Util.randomFrom(statuses), Util.randomFrom(prios)));
+            tasks.add(new Task(desc, Util.randomFrom(users), Util.randomFrom(users), Util.randomFrom(statuses), Util.randomFrom(prios)));
     }
 
     public Set<Task> getTasks() {

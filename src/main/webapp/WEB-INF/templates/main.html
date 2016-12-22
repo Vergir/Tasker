@@ -2,10 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>User List</title>
+    <title>Tasker::Main Window</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script>
         window.onload = function(){
+            $(".clickable-row").click(function() {
+                window.document.location = $(this).data("href");
+            });
+
             var modalUser = document.getElementById('modal-user');
             var modalTask = document.getElementById('modal-task');
             var userBtn = document.getElementById("addUserBtn");
@@ -39,19 +44,16 @@
 <body>
     <nav class="w3-sidenav w3-light-grey w3-card-2" style="width:15%">
         <table style="height: 90%">
-            <tr>
-                <th>Employees</th>
-            </tr>
             <tr th:each="user : ${users}">
-                <td th:classappend="${user.getId().equals(activeUser.id)} ? active-user"><a th:text="${user.username}" th:href="@{/tasks(user=${user.id},page=${page})}">Name of User</a></td>
+                <td th:classappend="${user.getId().equals(activeUser.id)} ? active-user"><a th:text="'['+${user.role.description.charAt(0)}+']'+${user.username}" th:href="@{/main(user=${user.id},page=${page})}">Name of User</a></td>
             </tr>
         </table>
         <div style="position: fixed; bottom: 0; width: 100%; margin: 10px">
             <ul class="w3-pagination w3-border w3-round">
                 <li th:classappend="${pageLowerLimit} ? disabled">
-                    <a th:href="@{/tasks(user=${activeUserId},page=${page}-1)}">&#10094; Prev</a></li>
+                    <a th:href="@{/main(user=${activeUserId},page=${page}-1)}">&#10094; Prev</a></li>
                 <li th:classappend="${pageUpperLimit} ? disabled">
-                    <a th:href="@{/tasks(user=${activeUserId},page=${page}+1)}">Next &#10095;</a></li>
+                    <a th:href="@{/main(user=${activeUserId},page=${page}+1)}">Next &#10095;</a></li>
             </ul>
         </div>
     </nav>
@@ -68,13 +70,13 @@
         <div class="w3-container">
             <h2 th:text="${activeUser.username}+'\'s Tasks'"></h2>
         </div>
-        <table class="w3-table w3-bordered">
+        <table class="w3-table w3-bordered w3-hoverable">
             <tr>
                 <th>Description</th>
                 <th>Status</th>
                 <th>Priority</th>
             </tr>
-            <tr th:each="task : ${tasks}" th:classappend="${task.status.description.equals('Closed')} ? disabled">
+            <tr th:each="task : ${tasks}" th:classappend="${task.status.description.equals('Closed')} ? disabled" class='clickable-row' th:attr="data-href='edit_task?task='+${task.id}">
                 <td th:text="${task.description}"></td>
                 <td th:text="${task.status.description}"></td>
                 <td th:text="${task.priority.description}"></td>
@@ -93,7 +95,6 @@
                 </select><br><br>
                 <label><b>Username</b></label><br>
                 <input type="text" placeholder="Enter Username" name="username" required><br><br>
-
                 <label><b>Password</b></label><br>
                 <input type="text" placeholder="Enter Password" name="password" required><br><br><br>
                 <input style="font-size: large" type="submit" value="Add User"/><br>

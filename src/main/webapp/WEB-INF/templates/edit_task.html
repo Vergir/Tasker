@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Tasker::Task Edit</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+</head>
+<link rel="stylesheet"
+      th:href="@{/resource/main.css}">
+<body>
+    <div>
+        <header class="w3-container w3-blue">
+            <h1 th:text="${currentUser.username + ' : ' + currentUser.role.description}" style="display: inline">Current User</h1>
+            <form class="header-button" action="log_out" method="get" style="margin-left:25px">
+                <input type="submit" value="Log Out">
+            </form>
+        </header>
+
+        <form action="add_task" method="post" id="taskform">
+            <label><b>Task ID:</b></label>
+            <label th:text="${task.id}"></label><br>
+            <label><b>Task Description</b></label>
+            <textarea style="width:300px;height:100px; resize: vertical" name="taskDesc" form="taskform" required th:text="${task.description}"></textarea><br>
+            <label><b>Assigned Employee</b></label>
+            <select name="assigneeName" form="taskform">
+                <option th:each="user : ${@userManager.users}" th:value="${user.username}" th:text="${user.username}"/>
+            </select><br>
+            <label><b>Task Status</b></label>
+            <select name="status" form="taskform">
+                <option th:each="status : ${@taskStatusManager.statuses}" th:text="${status.description}"/>
+            </select><br>
+            <label><b>Task Priority</b></label><br>
+            <select name="priority" form="taskform">
+                <option th:each="prio : ${@priorityManager.priorities}" th:text="${prio.description}"/>
+            </select><br><br>
+            <input style="font-size: large" type="submit" value="Update Task" th:classappend="${!currentUser.role.getCanAssignDevelopers()} ? disabled"/><br>
+        </form>
+    </div>
+</body>
+
+</html>

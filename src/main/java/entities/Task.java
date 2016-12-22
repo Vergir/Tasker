@@ -2,8 +2,6 @@ package entities;
 
 import jpa.DbObject;
 
-import java.util.Properties;
-
 /**
  * Created by Vergir on 27/11/2016.
  */
@@ -13,19 +11,21 @@ public class Task {
     private static final long ASSIGNEE_ID = 1;
     private static final long STATUS_ID = 2;
     private static final long PRIORITY_ID = 3;
+    private static final long ASSIGNED_BY_ID = 4;
 
     public Task() {
         dbObject = new DbObject();
     }
-    public Task(String description, long assigneeId, TaskStatus status, Priority priority) {
+    public Task(String description, User assignee, User assigner, TaskStatus status, Priority priority) {
         this();
         setDescription(description);
-        setAssignee(assigneeId);
+        setAssignee(assignee);
+        setAssignedBy(assigner);
         setStatus(status);
         setPriority(priority);
     }
 
-    public long getId() {
+    public Long getId() {
         return dbObject.getObjectId();
     }
 
@@ -36,11 +36,19 @@ public class Task {
         dbObject.setDescription(description);
     }
 
-    public Long getAssignee() {
-        return dbObject.getNumParam(ASSIGNEE_ID);
+    public User getAssignedBy() {
+        return new User(dbObject.getNumParam(ASSIGNED_BY_ID));
     }
-    public void setAssignee(Long assigneeId) {
-        dbObject.setNumParam(ASSIGNEE_ID, assigneeId);
+    public void setAssignedBy(User assigner) {
+        dbObject.setNumParam(ASSIGNED_BY_ID, assigner.getId());
+    }
+
+
+    public User getAssignee() {
+        return new User(dbObject.getNumParam(ASSIGNEE_ID));
+    }
+    public void setAssignee(User assignee) {
+        dbObject.setNumParam(ASSIGNEE_ID, assignee.getId());
     }
 
     public TaskStatus getStatus() {

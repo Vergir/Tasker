@@ -6,15 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import beans.*;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import entities.*;
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
 /**
@@ -36,20 +34,21 @@ public class MainController implements Serializable{
 
     User currentUser = null;
 
-    public MainController() {}
 
     @RequestMapping({"/","/login"})
     public String showIndexPage(Map<String, Object> model) {
-        return (currentUser != null) ? "tasks" : "login";
+        return (currentUser != null) ? "main" : "login";
     }
 
     @RequestMapping({"/check_user"})
     public @ResponseBody
     String checkUser(@RequestParam String username, @RequestParam String password) {
         User attempter = userManager.getUser(username, password);
+
         if (attempter != null) {
+
             currentUser = attempter;
-            return currentUser.getId().toString();
+            return "yes";
         }
         else
             return "no";
@@ -60,7 +59,7 @@ public class MainController implements Serializable{
         if (currentUser == null || !currentUser.getRole().getCanCreateUsers())
             return new ModelAndView("login");
                 userManager.addUser(username, password, roleManager.getRole(role));
-        return tasks(null, Integer.MAX_VALUE);
+        return main(null, Integer.MAX_VALUE);
     }
     @RequestMapping(value = "/add_task", method = RequestMethod.POST)
     public ModelAndView addTask(@RequestParam String taskDesc,
@@ -75,14 +74,14 @@ public class MainController implements Serializable{
                 assignee = u;
         TaskStatus taskStatus = taskStatusManager.getTaskStatus(status);
         Priority prio = priorityManager.getPriority(priority);
-        taskManager.addTask(new Task(taskDesc, assignee.getId(), taskStatus, prio));
+        taskManager.addTask(new Task(taskDesc, assignee, currentUser, taskStatus, prio));
 
-        return tasks(assignee.getId(), null);
+        return main(assignee.getId(), null);
     }
 
-    @RequestMapping({"/tasks"})
-    public ModelAndView tasks(@RequestParam(required = false) Long user,
-                              @RequestParam(required = false) Integer page) {
+    @RequestMapping({"/main"})
+    public ModelAndView main(@RequestParam(required = false) Long user,
+                             @RequestParam(required = false) Integer page) {
         final int USERS_PER_PAGE = 15;
 
         if (currentUser == null)
@@ -102,7 +101,7 @@ public class MainController implements Serializable{
         for (int i = (page-1)*USERS_PER_PAGE; i < upperLimit; i++)
             usersOnPage.add(allUsers.get(i));
         //...some code omitted for brevity
-        ModelAndView mav = new ModelAndView("tasks");
+        ModelAndView mav = new ModelAndView("main");
         User u = userManager.getUser(user);
         mav.addObject("pageLowerLimit", page == 1);
         mav.addObject("pageUpperLimit", page*USERS_PER_PAGE >= allUsers.size());
@@ -111,6 +110,26 @@ public class MainController implements Serializable{
         mav.addObject("page", page);
         mav.addObject("users", usersOnPage);
         mav.addObject("tasks", userManager.getUserTasks(u));
+        return mav;
+    }
+
+
+    @RequestMapping({"/edit_task"})
+    public ModelAndView editTask(@RequestParam Long task) {
+        final int USERS_PER_PAGE = 15;
+
+        if (currentUser == null)
+            return new ModelAndView("login");
+
+        List<User> allUsers = userManager.getUsers();
+
+        ModelAndView mav = new ModelAndView("edit_task");
+        Task taskToChange = null;
+        for (Task t : taskManager.getTasks())
+            if (t.getId().equals(task))
+                taskToChange = t;
+        mav.addObject("task", taskToChange);
+        mav.addObject("currentUser", currentUser);
         return mav;
     }
 

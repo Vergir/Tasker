@@ -52,8 +52,6 @@ public class UserManager {
     private void init() {
         int i = 0;
         Role[] roles = roleManager.getRoles().toArray(new Role[]{});
-        users.add(new User("Emma", "EmmaEmma", roleManager.getRole("Employee")));
-        users.add(new User("Margo", "MargoMargo", roleManager.getRole("Manager")));
 
         for (User u : users)
             if (u.getRole().getDescription().equals("none"))
@@ -88,12 +86,11 @@ public class UserManager {
         users.add(new User(username, password, role));
     }
 
-
     public Set<Task> getUserTasks(User u){
 	    Set<Task> result = new HashSet<Task>();
 
 	    for (Task t : taskManager.getTasks())
-            if (t.getAssignee().equals(u.getId()))
+            if (t.getAssignee().equals(u))
                 result.add(t);
 
 	    return result;

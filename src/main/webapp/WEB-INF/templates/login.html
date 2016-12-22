@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Login</title>
+    <title>Tasker::Login</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script>
@@ -14,7 +14,7 @@
                         $("#status").html("Wrong User/Password combination");
                     }
                     else {
-                        window.location.href = "tasks?user="+result;
+                        window.location.href = "main";
                     }
                 }});
             });
