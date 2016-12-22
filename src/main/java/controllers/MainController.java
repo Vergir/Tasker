@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import beans.*;
 import entities.*;
@@ -63,20 +64,17 @@ public class MainController implements Serializable{
     }
     @RequestMapping(value = "/add_task", method = RequestMethod.POST)
     public ModelAndView addTask(@RequestParam String taskDesc,
-                                @RequestParam String assigneeName,
+                                @RequestParam Long assignee,
                                 @RequestParam String status,
                                 @RequestParam String priority) {
         if (currentUser == null || !currentUser.getRole().getCanAssignDevelopers())
             return new ModelAndView("login");
-        User assignee = null;
-        for (User u : userManager.getUsers())
-            if (u.getUsername().equals(assigneeName))
-                assignee = u;
+        User user = userManager.getUser(assignee);
         TaskStatus taskStatus = taskStatusManager.getTaskStatus(status);
         Priority prio = priorityManager.getPriority(priority);
-        taskManager.addTask(new Task(taskDesc, assignee, currentUser, taskStatus, prio));
+        taskManager.addTask(new Task(taskDesc, user, currentUser, taskStatus, prio));
 
-        return main(assignee.getId(), null);
+        return main(assignee, null);
     }
 
     @RequestMapping({"/main"})
@@ -100,7 +98,7 @@ public class MainController implements Serializable{
         int upperLimit = page*USERS_PER_PAGE < allUsers.size() ? page*USERS_PER_PAGE : allUsers.size();
         for (int i = (page-1)*USERS_PER_PAGE; i < upperLimit; i++)
             usersOnPage.add(allUsers.get(i));
-        //...some code omitted for brevity
+
         ModelAndView mav = new ModelAndView("main");
         User u = userManager.getUser(user);
         mav.addObject("pageLowerLimit", page == 1);
@@ -114,23 +112,41 @@ public class MainController implements Serializable{
     }
 
 
-    @RequestMapping({"/edit_task"})
-    public ModelAndView editTask(@RequestParam Long task) {
-        final int USERS_PER_PAGE = 15;
-
+    @RequestMapping({"/edit_task", "/show_task"})
+    public ModelAndView task(@RequestParam Long task) {
         if (currentUser == null)
             return new ModelAndView("login");
 
-        List<User> allUsers = userManager.getUsers();
 
-        ModelAndView mav = new ModelAndView("edit_task");
-        Task taskToChange = null;
-        for (Task t : taskManager.getTasks())
-            if (t.getId().equals(task))
-                taskToChange = t;
+        ModelAndView mav = null;
+        if (currentUser.getRole().getCanAssignDevelopers())
+            mav = new ModelAndView("edit_task");
+        else
+            mav = new ModelAndView("view_task");
+        Task taskToChange = taskManager.getTask(task);
         mav.addObject("task", taskToChange);
         mav.addObject("currentUser", currentUser);
         return mav;
+    }
+
+    @RequestMapping({"/update_task"})
+    public ModelAndView updateTask(@RequestParam Long task,
+                                   @RequestParam String taskDesc,
+                                   @RequestParam Long assignee,
+                                   @RequestParam String status,
+                                   @RequestParam String priority) {
+        if (currentUser == null || !currentUser.getRole().getCanAssignDevelopers())
+            return new ModelAndView("login");
+        TaskStatus taskStatus = taskStatusManager.getTaskStatus(status);
+        Priority prio = priorityManager.getPriority(priority);
+
+        Task taskToChange = taskManager.getTask(task);
+        taskToChange.setDescription(taskDesc);
+        taskToChange.setAssignee(userManager.getUser(assignee));
+        taskToChange.setStatus(taskStatusManager.getTaskStatus(status));
+        taskToChange.setPriority(priorityManager.getPriority(priority));
+
+        return main(assignee, null);
     }
 
     @RequestMapping({"/log_out"})

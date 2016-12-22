@@ -109,8 +109,8 @@
                 <label><b>Task Description</b></label><br>
                 <textarea style="width:300px;height:100px; resize: vertical" name="taskDesc" id="taskDesc" form="taskform" required></textarea><br>
                 <label><b>Assigned Employee</b></label><br>
-                <select name="assigneeName" form="taskform">
-                    <option th:each="user : ${@userManager.users}" th:value="${user.username}" th:text="${user.username}"/>
+                <select name="assignee" form="taskform">
+                    <option th:each="user : ${@userManager.users}" th:value="${user.id}" th:text="${user.username}"/>
                 </select><br>
                 <label><b>Task Status</b></label><br>
                 <select name="status" form="taskform">

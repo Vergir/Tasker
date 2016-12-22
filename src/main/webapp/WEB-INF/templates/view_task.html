@@ -15,37 +15,22 @@
             <input type="submit" value="Log Out">
         </form>
         <form class="header-button" action="main" method="get">
-            <input type="submit" value="Back to Main"/>
+            <input type="submit" value="Back To Main"/>
         </form>
     </header>
     <div class="w3-display-container w3-large" style="margin-top: 20%">
     <div class="w3-display-middle w3-padding w3-topbar w3-bottombar">
         <form class="w3-padding" action="update_task" method="post" id="taskform">
-            <input type="hidden" title="task id" name="task" th:value="${task.id}">
-            <input type="hidden" title="Task Description" name="taskDesc" form="taskform"th:value="${task.description}">
             <label><b>Task Description</b></label><br>
-            <span form="taskform" th:text="${task.description}"></span><br>
+            <span name="taskDesc" form="taskform" th:text="${task.description}"></span><br>
             <label><b>Created By</b></label>
             <a th:href="@{/main(user=${task.assignedBy.id})}" th:text="${task.assignedBy.username}"></a><br><br>
             <label><b>Assignee</b></label>
             <a th:href="@{/main(user=${task.assignee.id})}" th:text="${task.assignee.username}"></a><br>
-            <label><i>Reassign to </i></label>
-            <select name="assignee" form="taskform">
-                <option th:each="user : ${@userManager.users}" th:value="${user.id}" th:text="${user.username}"></option>
-            </select><br><br>
             <label><b>Task Status</b></label>
             <span th:text="${task.status.description}"></span><br>
-            <label><i>Change to </i></label>
-            <select name="status" form="taskform">
-                <option th:each="status : ${@taskStatusManager.statuses}" th:text="${status.description}"></option>
-            </select><br><br>
             <label><b>Task Priority</b></label>
             <span th:text="${task.priority.description}"></span><br>
-            <label><i>Change to </i></label>
-            <select name="priority" form="taskform">
-                <option th:each="prio : ${@priorityManager.priorities}" th:text="${prio.description}"></option>
-            </select><br><br>
-            <input style="font-size: large" type="submit" value="Update Task"/><br>
         </form>
         </div>
     </div>

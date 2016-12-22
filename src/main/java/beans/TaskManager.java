@@ -54,6 +54,12 @@ public class TaskManager {
     public Set<Task> getTasks() {
         return tasks;
     }
+    public Task getTask(Long id) {
+        for (Task t : tasks)
+            if (t.getId().equals(id))
+                return t;
+        return null;
+    }
 
     public void addTask(Task t) {
         tasks.add(t);
