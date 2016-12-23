@@ -4,12 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import beans.*;
 import entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -37,8 +35,11 @@ public class MainController implements Serializable{
 
 
     @RequestMapping({"/","/login"})
-    public String showIndexPage(Map<String, Object> model) {
-        return (currentUser != null) ? "main" : "login";
+    public ModelAndView showIndexPage() {
+        if (currentUser != null)
+            return main(null,  null);
+
+        return new ModelAndView("login");
     }
 
     @RequestMapping({"/check_user"})
@@ -67,7 +68,7 @@ public class MainController implements Serializable{
                                 @RequestParam Long assignee,
                                 @RequestParam String status,
                                 @RequestParam String priority) {
-        if (currentUser == null || !currentUser.getRole().getCanAssignDevelopers())
+        if (currentUser == null || !currentUser.getRole().getCanProcessTasks())
             return new ModelAndView("login");
         User user = userManager.getUser(assignee);
         TaskStatus taskStatus = taskStatusManager.getTaskStatus(status);
@@ -117,13 +118,15 @@ public class MainController implements Serializable{
         if (currentUser == null)
             return new ModelAndView("login");
 
+        Task taskToChange = taskManager.getTask(task);
+        if (taskToChange == null)
+            return main(null, null);
 
         ModelAndView mav = null;
-        if (currentUser.getRole().getCanAssignDevelopers())
+        if (currentUser.getRole().getCanProcessTasks())
             mav = new ModelAndView("edit_task");
         else
             mav = new ModelAndView("view_task");
-        Task taskToChange = taskManager.getTask(task);
         mav.addObject("task", taskToChange);
         mav.addObject("currentUser", currentUser);
         return mav;
@@ -135,7 +138,7 @@ public class MainController implements Serializable{
                                    @RequestParam Long assignee,
                                    @RequestParam String status,
                                    @RequestParam String priority) {
-        if (currentUser == null || !currentUser.getRole().getCanAssignDevelopers())
+        if (currentUser == null || !currentUser.getRole().getCanProcessTasks())
             return new ModelAndView("login");
         TaskStatus taskStatus = taskStatusManager.getTaskStatus(status);
         Priority prio = priorityManager.getPriority(priority);
