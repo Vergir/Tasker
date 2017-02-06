@@ -1,34 +1,15 @@
 # Tasker #
+Java + Spring Web Application for assigning tasks to employees.
 
-Приложение для назначения, отслеживания, и различного взаимодействия с задачами в рамках проекта.
+It was developed during *Java + Oracle for Enterprise Solutions* course I took within a company. 
 
-## Инструкции ##
+There's a presentation for anyone willing to see it in work (it's RU but there are pics and demo-video): https://www.j.mp/nc_tasker
 
-GF = папка с глассфишем  
-TSKR = корневая папка приложения
+It is *not* production-ready per se, and I see it's use in being a template for a full-stack MVC Java Spring Web App. Also as some sort of proof or accomplishment for myself.
+
+## Build ##
+`$ mvn clean package`
  
-Сборка проекта:  
-  $ mvn clean package
- 
-Для развёртывания приложения:
- 
-1. Запустить сервер  
-  $ GF/bin/asadmin start-domain domain1
- 
-2. Разворачивание  
-  2.1 Поместить .war-архив в папку авторазвертывания  
-    $ cp TSKR/target/Tasker-0.1.0.war GF/glassfish/domains/domain1/autodeploy  
-  ЛИБО  
-  2.2 Вспользоваться консолью администратора  
-    Для этого открыть в браузере localhost:4848, залогиниться, в меню слева выбрать Applications, дальше очевидно.
- 
-3. Узнать результат развертывания  
-  3.1 Посмотреть содержимое папки autodeploy на наличие либо Tasker-0.1.0.war_deployed, либо Tasker-0.1.0.war_deployfailed  
-    $ ls -l GF/glassfish/domains/domain1/autodeploy  
-  ЛИБО  
-    3.2 В консоли администратора появится всплывающее сообщение, сообщающее о статусе.  
- 
-4. (Опционально) Поиск ошибок  
-  4.1 Открыть содержимое лог-файла, находящегося по адресу GF/glassfish/domains/domain1/logs/server.log  
-  ЛИБО  
-  4.2 В консоли Администратора в меню слева выбрать Server, в окне выбрать пункт Log.  
+## Deploy ##
+Tested on **Glassfish 3.1.2**  
+For a deploy just `mv` your *.war* into `$GLASSFISH_HOME/glassfish/domains/<domain_name>/autodeploy/`
